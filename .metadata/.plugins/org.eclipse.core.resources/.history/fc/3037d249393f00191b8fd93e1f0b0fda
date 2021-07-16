@@ -1,0 +1,126 @@
+package button_click_game;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public class ButtonGame extends JFrame {
+	private static final int BUTTON = 3;
+	private Button button_10 = new Button(10, "10score.png");
+	private Button button_50 = new Button(50, "50score.png");
+	private Button button_100 = new Button(100, "100score.png");
+	
+	
+	private ImageIcon Icon10 = new ImageIcon(Main.class.getResource("../images/"+button_10.getScore()));
+	private ImageIcon Icon50 = new ImageIcon(Main.class.getResource("../images/"+button_50.getScore()));
+	private ImageIcon Icon100 = new ImageIcon(Main.class.getResource("../images/"+button_100.getScore()));
+	
+	private JButton scoreButton_10 = new JButton(Icon10);
+	private JButton scoreButton_50 = new JButton(Icon50);
+	private JButton scoreButton_100 = new JButton(Icon100);
+	
+	private JLabel title = new JLabel("버튼 클릭 게임!");
+	
+	private JButton startButton = new JButton("시작하기");
+	private JButton exitButton = new JButton("종료하기");
+	
+	private boolean isLoopRunning = false;
+	
+	public ButtonGame() {
+		setTitle("버튼 클릭 게임");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(null);
+		setResizable(false);
+		
+		title.setSize(150, 20);
+		title.setLocation(200, 20);
+		add(title);
+		
+		startButton.setSize(100, 30);
+		startButton.setLocation(120, 400);		
+		add(startButton);
+		
+		exitButton.setSize(100,30);
+		exitButton.setLocation(280,400);
+		add(exitButton);
+		
+		setSize(500, 500);
+		setVisible(true);
+		
+		startButton.addActionListener(new ActionListener()
+	    {		
+	      @Override 
+	      public void actionPerformed(ActionEvent e) 
+	      { 
+	         title.setVisible(false);
+	         startButton.setVisible(false);
+	         exitButton.setVisible(false);   
+	         startButtonCreationLoop();
+	        } 
+	    });
+		
+		exitButton.addActionListener(new ActionListener()
+	    {		
+	      @Override 
+	      public void actionPerformed(ActionEvent e) 
+	      { 
+	    	  isLoopRunning = false;
+	    	  System.exit(0);
+    	  }
+	    });
+	}
+	
+	private void startButtonCreationLoop() {
+		if (!isLoopRunning) isLoopRunning = true;
+		while (isLoopRunning) {
+			ButtonMake(new ButtonStateListener() {
+				@Override
+				public void onButtonCreated() {
+					randomButton();
+				}
+
+				@Override
+				public void onButtonRemoved() {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+		}
+		
+		
+		while (true) {
+			
+		}
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private interface ButtonStateListener {
+		void onButtonCreated();
+		void onButtonRemoved();
+	}
+
+	public void ButtonMake(ButtonStateListener listener) {		
+		scoreButton_10.setSize(50, 50);
+		scoreButton_10.setLocation((int)(500*Math.random()), (int)(500*Math.random()));
+		add(scoreButton_10);
+		
+		listener.onCreateFinished();
+	}
+	public void randomButton() {
+		try {
+			Thread.sleep(500);
+		} catch(InterruptedException ex) {
+			ex.printStackTrace();
+		} 
+		//scoreButton_10.setVisible(false);
+		remove(scoreButton_10);
+	}
+}
